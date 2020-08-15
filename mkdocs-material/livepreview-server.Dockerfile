@@ -5,7 +5,7 @@ FROM python:3.8.5-slim-buster
 RUN apt update && apt upgrade -y
 
 # Install git and other needed deps
-RUN apt install -y git wget curl bash openssh
+RUN apt install -y git wget curl bash
 
 # Remember to nuke cached APT lists and archives
 RUN rm -rf /var/lib/apt/lists /var/cache/apt/archives
