@@ -5,10 +5,14 @@ on:
     # Publish `master` as Docker `latest` image.
     branches:
       - master
-
-env:
-  # TODO: Change variable to your image's name.
-  IMAGE_NAME: madebythepinshub/mkdocs-material
+    paths:
+      - mkdocs-material
+  pull_request:
+    branches:
+      - master
+    paths:
+      - mkdocs-material
+  
 
 jobs:
   # Run tests.
@@ -44,11 +48,13 @@ jobs:
         uses: docker/build-push-action@v1.1.0
         with:
           # Username used to log in to a Docker registry. If not set then no login will occur
-          username: thepinsteam
+          username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
           # Password or personal access token used to log in to a Docker registry. If not set then no login will occur
-          password: ${{secrets.DOCKER_REGISTRY_ACCESS_KEY}}
+          password: ${{ secrets.DOCKER_REGISTRY_ACCESS_KEY }}
           # Docker repository to tag the image with
           repository: madebythepinshub/mkdocs-material
+          # Image tags
+          tags: latest
           # Path to the build context
           path: mkdocs-material
           # Whether to push the image
