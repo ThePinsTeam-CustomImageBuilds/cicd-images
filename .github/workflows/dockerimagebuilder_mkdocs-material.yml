@@ -46,7 +46,7 @@ jobs:
           # Username used to log in to a Docker registry. If not set then no login will occur
           username: thepinsteam
           # Password or personal access token used to log in to a Docker registry. If not set then no login will occur
-          password: ${{ secrets.DOCKER_HUB_ACCESS_KEY }}
+          password: ${{secrets.DOCKER_REGISTRY_ACCESS_KEY}}
           # Docker repository to tag the image with
           repository: madebythepinshub/mkdocs-material
           # Path to the build context
