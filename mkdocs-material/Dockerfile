@@ -15,7 +15,7 @@ RUN pip3 install --no-cache mkdocs mkdocs-material
 
 # ..and the basic plugins
 RUN pip install --no-cache-dir \
-        'mkdocs-awesome-pages-plugin>=2.2.1' \
-        'mkdocs-git-revision-date-localized-plugin>=0.4' \
-        'mkdocs-minify-plugin>=0.3' \
-        'mkdocs-redirects>=1.0';
+        'mkdocs-awesome-pages-plugin' \
+        'mkdocs-git-revision-date-localized-plugin' \
+        'mkdocs-minify-plugin' \
+        'mkdocs-redirects';
