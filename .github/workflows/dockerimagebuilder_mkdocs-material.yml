@@ -12,6 +12,8 @@ on:
       - master
     paths:
       - mkdocs-material/*
+  schedule:
+    - cron: "0 0 */7 * *"
   
 
 jobs:
