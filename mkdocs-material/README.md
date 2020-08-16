@@ -2,6 +2,8 @@
 
 ## Usage
 
+### With GitLab CI/CD
+
 ```yml
 # use this example on your .gitlab-ci.yml file
 # no virtualenv usage required
@@ -16,3 +18,8 @@ pages:
     paths:
       - public
 ```
+
+## Support
+
+* [Developers' Lounge on TG](https://t.me/ThePinsTeam_DevOpsChat)
+* [Issue Tracker](https://github.com/ThePinsTeam-CustomImageBuilds/gitlab-cicd/issues)
