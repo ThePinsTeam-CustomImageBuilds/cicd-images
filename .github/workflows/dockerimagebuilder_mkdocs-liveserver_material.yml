@@ -1,0 +1,55 @@
+name: Push 'madebythepinshub/mkdocs-material:liveserver' image to Docker Hub
+
+on:
+  push:
+    # Publish `master` as Docker `latest` image.
+    branches:
+      - master
+    paths:
+      - mkdocs-material/*
+  pull_request:
+    branches:
+      - master
+    paths:
+      - mkdocs-material/*
+  schedule:
+    - cron: 0 0 */7 * *
+
+jobs:
+  # Run tests.
+  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run tests
+        run: |
+          if [ -f docker-compose.test.yml ]; then
+            docker-compose --file docker-compose.test.yml build
+            docker-compose --file docker-compose.test.yml run sut
+          else
+            docker build . --file mkdocs-material/Dockerfile
+          fi
+
+  push:
+    # Ensure test job passes before pushing image.
+    needs: test
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v1.1.0
+        with:
+          username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+          password: ${{ secrets.DOCKER_REGISTRY_ACCESS_KEY }}
+          repository: madebythepinshub/mkdocs-material
+          tags: liveserver
+          path: mkdocs-material
+          dockerfile: liveserver.Dockerfile
+          push: true
