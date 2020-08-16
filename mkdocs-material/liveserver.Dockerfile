@@ -10,6 +10,9 @@ RUN apt install -y git wget curl bash
 # Remember to nuke cached APT lists and archives
 RUN rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
+# First, upgrade pip and setuptools.
+RUN pip3 install --no-cache --upgrade pip setuptools wheel
+
 # Then install Mkdocs and the theme with pip.
 RUN pip3 install --no-cache mkdocs mkdocs-material
 
