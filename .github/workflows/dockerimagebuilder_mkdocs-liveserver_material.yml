@@ -51,5 +51,5 @@ jobs:
           repository: madebythepinshub/mkdocs-material
           tags: liveserver
           path: mkdocs-material
-          dockerfile: liveserver.Dockerfile
+          dockerfile: mkdocs-material/liveserver.Dockerfile
           push: true
