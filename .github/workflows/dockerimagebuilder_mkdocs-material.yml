@@ -1,4 +1,4 @@
-name: Push 'madebythepinshub/mkdocs-material' image to Docker Hub
+name: "Docker CI for madebythepinshub/mkdocs-material:latest"
 
 on:
   push:
@@ -6,15 +6,12 @@ on:
     branches:
       - master
     paths:
-      - mkdocs-material/*
+      - build/mkdocs-material/*
   pull_request:
     branches:
       - master
     paths:
-      - mkdocs-material/*
-  schedule:
-    - cron: "0 0 */7 * *"
-  
+      - build/mkdocs-material/*  
 
 jobs:
   # Run tests.
@@ -26,16 +23,8 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Run tests
-        run: |
-          if [ -f docker-compose.test.yml ]; then
-            docker-compose --file docker-compose.test.yml build
-            docker-compose --file docker-compose.test.yml run sut
-          else
-            docker build . --file mkdocs-material/Dockerfile
-          fi
+        run: docker build . --file build/mkdocs-material/Dockerfile
 
-  # Push image to GitHub Packages.
-  # See also https://docs.docker.com/docker-hub/builds/
   push:
     # Ensure test job passes before pushing image.
     needs: test
@@ -49,15 +38,9 @@ jobs:
       - name: Build and push Docker images
         uses: docker/build-push-action@v1.1.0
         with:
-          # Username used to log in to a Docker registry. If not set then no login will occur
           username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
-          # Password or personal access token used to log in to a Docker registry. If not set then no login will occur
           password: ${{ secrets.DOCKER_REGISTRY_ACCESS_KEY }}
-          # Docker repository to tag the image with
           repository: madebythepinshub/mkdocs-material
-          # Image tags
           tags: latest
-          # Path to the build context
-          path: mkdocs-material
-          # Whether to push the image
+          path: build/mkdocs-material
           push: true
