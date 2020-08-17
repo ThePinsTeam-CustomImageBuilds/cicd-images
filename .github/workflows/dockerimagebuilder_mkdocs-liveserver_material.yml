@@ -6,14 +6,12 @@ on:
     branches:
       - master
     paths:
-      - mkdocs-material/*
+      - liveserver/mkdocs-material/*
   pull_request:
     branches:
       - master
     paths:
-      - mkdocs-material/*
-  schedule:
-    - cron: 0 0 */7 * *
+      - liveserver/mkdocs-material/*
 
 jobs:
   # Run tests.
@@ -25,13 +23,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Run tests
-        run: |
-          if [ -f docker-compose.test.yml ]; then
-            docker-compose --file docker-compose.test.yml build
-            docker-compose --file docker-compose.test.yml run sut
-          else
-            docker build . --file mkdocs-material/Dockerfile
-          fi
+        run: docker build . --file liveserver/mkdocs-material/Dockerfile
 
   push:
     # Ensure test job passes before pushing image.
@@ -50,6 +42,6 @@ jobs:
           password: ${{ secrets.DOCKER_REGISTRY_ACCESS_KEY }}
           repository: madebythepinshub/mkdocs-material
           tags: liveserver
-          path: mkdocs-material
-          dockerfile: mkdocs-material/liveserver.Dockerfile
+          path: liveserver/mkdocs-material
+          dockerfile: liveserver/mkdocs-material/Dockerfile
           push: true
