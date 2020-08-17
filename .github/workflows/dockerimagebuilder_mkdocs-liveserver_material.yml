@@ -1,4 +1,4 @@
-name: Push 'madebythepinshub/mkdocs-material:liveserver' image to Docker Hub
+name: "Docker CI for madebythepinshub/mkdocs-material:liveserver"
 
 on:
   push:
