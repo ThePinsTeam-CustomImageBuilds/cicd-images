@@ -11,30 +11,29 @@ on:
     branches:
       - master
     paths:
-      - build/mkdocs-material/*  
+      - build/mkdocs-material/*
+  schedule:
+    - cron: "* */12 * * *"
 
 jobs:
   # Run tests.
   # See also https://docs.docker.com/docker-hub/builds/automated-testing/
   test:
+    name: "Attempt to build image"
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
-
       - name: Run tests
         run: docker build . --file build/mkdocs-material/Dockerfile
 
   push:
     # Ensure test job passes before pushing image.
     needs: test
-
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
-
+    name: "Push to Docker Registry"
     steps:
       - uses: actions/checkout@v2
-
       - name: Build and push Docker images
         uses: docker/build-push-action@v1.1.0
         with:
