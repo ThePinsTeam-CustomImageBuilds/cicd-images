@@ -1,14 +1,13 @@
 # Attempt to use latest Python version as possible.
-FROM python:3.8.5-slim-buster
+FROM python:3-slim-buster
 
 # Update Debian packages first
-RUN apt update && apt upgrade -y
-
-# Install git and other needed deps
-RUN apt install -y git wget curl bash
-
-# Remember to nuke cached APT lists and archives
-RUN rm -rf /var/lib/apt/lists /var/cache/apt/archives
+RUN apt update && apt install -y \
+    git \
+    wget \
+    curl \
+    bash && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # First, upgrade pip and setuptools.
 RUN pip3 install --no-cache --upgrade pip setuptools wheel
