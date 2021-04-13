@@ -31,7 +31,8 @@ jobs:
     needs: test
 
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+    # if hard-forked, please change this
+    if: github.repository_owner == 'ThePinsTeam-CustomImageBuilds'
 
     steps:
       - uses: actions/checkout@v2
