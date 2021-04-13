@@ -31,7 +31,7 @@ jobs:
     # Ensure test job passes before pushing image.
     needs: test
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+    if: github.repository_owner == 'ThePinsTeam-CustomImageBuilds'
     name: "Push to Docker Registry"
     steps:
       - uses: actions/checkout@v2
