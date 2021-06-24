@@ -1,0 +1,65 @@
+name: "Docker CI for mkdocs-material stuff"
+
+on:
+  push:
+    # Publish `master` as Docker `latest` image.
+    branches:
+      - master
+
+jobs:
+  build-image:
+    # Ensure test job passes before pushing image.
+    name: Build mkdocs-material images
+    runs-on: ubuntu-latest
+    name: "Push to Docker Registry"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login with Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+          password: ${{ secrets.DOCKER_REGISTRY_ACCESS_KEY }}
+      - name: Login with GHCR
+        uses: docker/login-action@v1
+
+      - name: Get files changed
+        uses: dorny/paths-filter@eb75a1edc117d3756a18ef89958ee59f9500ba58
+        id: filter
+        with:
+          # Base branch used to get changed files
+          base: 'mmaster'
+
+          # Enables setting an output in the format in `${FILTER_NAME}_files
+          # with the names of the matching files formatted as JSON array
+          list-files: json
+
+          # Returns list of changed files matching each filter
+          filters: |
+            liveserver:
+              - 'liveserver/mkdocs-material/**'
+            main:
+              - 'build/mkdocs-material/**"
+            manualTrigger:
+              - '.trigger-build'
+
+      - name: Generate matadata from main
+        if: ${{ steps.filter.outputs.main == 'true' || steps.filter.outputs.manualTrigger == 'true' }}
+        uses: docker/metadata-action@v3
+        id: metadata-main
+        with:
+          images: |
+            ghcr.io/thepinsteam-customimagebuilds/mkdocs-material
+            madebythepinshub/mkdocs-material
+          tags: |
+            type=sha,format=long
+          flavor: |
+            latest=true
+
+      - name: "Build the image [main]"
+        if: ${{ steps.filter.outputs.main == 'true' || steps.filter.outputs.manualTrigger == 'true' }}
+        uses: docker/build-push-action@v2
+        with:
+          context: build/mkdocs-material
+          tags: ${{ steps.metadata-main.outputs.tags }}
+          push: true
