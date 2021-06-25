@@ -2,11 +2,7 @@
 FROM python:3-slim-buster
 
 # Update Debian packages first
-RUN apt update && apt install -y \
-    git \
-    wget \
-    curl \
-    bash && \
+RUN apt update && apt install -y git wget curl bash && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # First, upgrade pip and setuptools.
@@ -20,4 +16,10 @@ RUN pip install --no-cache-dir \
         'mkdocs-awesome-pages-plugin' \
         'mkdocs-git-revision-date-localized-plugin' \
         'mkdocs-minify-plugin' \
-        'mkdocs-redirects';
+        'mkdocs-redirects'
+
+# assume you mounted it when running
+WORKDIR /docs
+
+ENTRYPOINT ["mkdocs"]
+CMD ["build"]
