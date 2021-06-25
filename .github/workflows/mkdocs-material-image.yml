@@ -18,7 +18,6 @@ jobs:
     # Ensure test job passes before pushing image.
     name: Build mkdocs-material images
     runs-on: ubuntu-latest
-    name: "Push to Docker Registry"
     steps:
       - uses: actions/checkout@v2
 
@@ -73,7 +72,6 @@ jobs:
             type=sha,format=long
           flavor: |
             latest=true
-
       - name: "Build the image [main]"
         if: ${{ steps.filter.outputs.main == 'true' || steps.filter.outputs.manualTrigger == 'true' }}
         uses: docker/build-push-action@v2
@@ -85,7 +83,7 @@ jobs:
       - name: Generate matadata from liveserver
         if: ${{ steps.filter.outputs.liveserver == 'true' || steps.filter.outputs.manualTrigger == 'true' }}
         uses: docker/metadata-action@v3
-        id: metadata-main
+        id: metadata-live
         with:
           images: |
             ghcr.io/${{ env.gh_namespace }}/${{ env.image_name }}
@@ -97,11 +95,17 @@ jobs:
           flavor: |
             latest=false
 
+      - name: Preview values first (liveserver)
+        run: "echo -e $RESULT_METADATA_GENERATOR"
+        if: ${{ steps.filter.outputs.liveserver == 'true' || steps.filter.outputs.manualTrigger == 'true' }}
+        env:
+          RESULT_METADATA_GENERATOR: ${{ fromJSON(steps.metadata-live.outputs) }}
+
       - name: "Build the image [liveserver]"
         if: ${{ steps.filter.outputs.liveserver == 'true' || steps.filter.outputs.manualTrigger == 'true' }}
         uses: docker/build-push-action@v2
         with:
-          context: ${{ env.context_0 }}
-          tags: ${{ steps.metadata-main.outputs.tags }}
+          context: ${{ env.context_1 }}
+          tags: ${{ steps.metadata-live.outputs.tags }}
           push: true
 
