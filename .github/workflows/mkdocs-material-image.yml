@@ -21,24 +21,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Login with Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
-          password: ${{ secrets.DOCKER_REGISTRY_ACCESS_KEY }}
-      - name: Login with GHCR
-        uses: docker/login-action@v1
-        with:
-          username: RecapTimeBot
-          password: ${{ secrets.GH_SERVICE_ACCOUNT_API_KEY }}
-          registry: ghcr.io
-      - name: Login with RHQCR
-        uses: docker/login-action@v1
-        with:
-          username: madebythepinshub+github_actions
-          password: ${{ secrets.RHQCR_SERVICE_ACCOUNT_KEY }}
-          registry: quay.io
-
       - name: Get files changed
         uses: dorny/paths-filter@v2
         id: filter
@@ -57,7 +39,25 @@ jobs:
             main:
               - 'build/mkdocs-material/**"
             manualTrigger:
-              - '.trigger-build'
+              - 'trigger-build'
+
+      - name: Login with Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+          password: ${{ secrets.DOCKER_REGISTRY_ACCESS_KEY }}
+      - name: Login with GHCR
+        uses: docker/login-action@v1
+        with:
+          username: RecapTimeBot
+          password: ${{ secrets.GH_SERVICE_ACCOUNT_API_KEY }}
+          registry: ghcr.io
+      - name: Login with RHQCR
+        uses: docker/login-action@v1
+        with:
+          username: madebythepinshub+github_actions
+          password: ${{ secrets.RHQCR_SERVICE_ACCOUNT_KEY }}
+          registry: quay.io
 
       - name: Generate matadata from main
         if: ${{ steps.filter.outputs.main == 'true' || steps.filter.outputs.manualTrigger == 'true' }}
