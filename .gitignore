@@ -1,0 +1,5 @@
+# Swapfiles and temp logfiles
+*.log
+*.swp
+# direnv stuff
+.envrc
