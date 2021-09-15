@@ -10,8 +10,6 @@ env:
   # since our RHQCR and Docker Hub namespaces are same,
   # we can just squash them into one env.
   docker_namespace: madebythepinshub
-  context_0: build/mkdocs-material
-  context_1: liveserver/mkdocs-material
 
 jobs:
   build-image:
@@ -34,12 +32,10 @@ jobs:
 
           # Returns list of changed files matching each filter
           filters: |
-            liveserver:
-              - 'liveserver/mkdocs-material/**'
             main:
-              - 'build/mkdocs-material/**"
+              - 'docker/mkdocs-material/**"
             manualTrigger:
-              - 'trigger-build'
+              - .trigger-build
 
       - name: Login with Docker Hub
         uses: docker/login-action@v1
@@ -59,10 +55,9 @@ jobs:
           password: ${{ secrets.RHQCR_SERVICE_ACCOUNT_KEY }}
           registry: quay.io
 
-      - name: Generate matadata from main
-        if: ${{ steps.filter.outputs.main == 'true' || steps.filter.outputs.manualTrigger == 'true' }}
+      - name: Generate matadata
         uses: docker/metadata-action@v3
-        id: metadata-main
+        id: metadata
         with:
           images: |
             ghcr.io/${{ env.gh_namespace }}/${{ env.image_name }}
@@ -72,40 +67,10 @@ jobs:
             type=sha,format=long
           flavor: |
             latest=true
-      - name: "Build the image [main]"
+      - name: "Build the image"
         if: ${{ steps.filter.outputs.main == 'true' || steps.filter.outputs.manualTrigger == 'true' }}
         uses: docker/build-push-action@v2
         with:
-          context: ${{ env.context_0 }}
+          context: docker/mkdocs-material
           tags: ${{ steps.metadata-main.outputs.tags }}
           push: true
-
-      - name: Generate matadata from liveserver
-        if: ${{ steps.filter.outputs.liveserver == 'true' || steps.filter.outputs.manualTrigger == 'true' }}
-        uses: docker/metadata-action@v3
-        id: metadata-live
-        with:
-          images: |
-            ghcr.io/${{ env.gh_namespace }}/${{ env.image_name }}
-            quay.io/${{ env.docker_namespace }}/${{ env.image_name }}
-            ${{ env.docker_namespace }}/${{ env.image_name }}
-          tags: |
-            type=sha,format=long
-            liveserver
-          flavor: |
-            latest=false
-
-      - name: Preview values first (liveserver)
-        run: "echo -e $RESULT_METADATA_GENERATOR"
-        if: ${{ steps.filter.outputs.liveserver == 'true' || steps.filter.outputs.manualTrigger == 'true' }}
-        env:
-          RESULT_METADATA_GENERATOR: ${{ fromJSON(steps.metadata-live.outputs) }}
-
-      - name: "Build the image [liveserver]"
-        if: ${{ steps.filter.outputs.liveserver == 'true' || steps.filter.outputs.manualTrigger == 'true' }}
-        uses: docker/build-push-action@v2
-        with:
-          context: ${{ env.context_1 }}
-          tags: ${{ steps.metadata-live.outputs.tags }}
-          push: true
-
