@@ -32,10 +32,11 @@ jobs:
 
           # Returns list of changed files matching each filter
           filters: |
-            main:
-              - 'docker/mkdocs-material/**"
-            manualTrigger:
-              - .trigger-build
+            dockerfile:
+              - 'docker/mkdocs-material'
+            manual:
+              - '.trigger-rebuild'
+              - '.github/workflows/docker-ci.yml'
 
       - name: Login with Docker Hub
         uses: docker/login-action@v1
@@ -68,7 +69,7 @@ jobs:
           flavor: |
             latest=true
       - name: "Build the image"
-        if: ${{ steps.filter.outputs.main == 'true' || steps.filter.outputs.manualTrigger == 'true' }}
+        if: ${{ steps.filter.outputs.dockerfile == 'true' || steps.filter.outputs.manual == 'true' }}
         uses: docker/build-push-action@v2
         with:
           context: docker/mkdocs-material
