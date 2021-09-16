@@ -36,7 +36,7 @@ jobs:
               - 'docker/mkdocs-material/**'
             manual:
               - '.trigger-rebuild'
-              - '.github/workflows/docker-ci.yml'
+              - '.github/workflows/mkdocs-material-image.yml'
 
       # Login step
       - name: Login with Docker Hub
