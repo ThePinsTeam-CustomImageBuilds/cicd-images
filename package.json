@@ -1,0 +1,23 @@
+{
+  "name": "@thepinsteam-infra-team/custom-cicd-images",
+  "private": true,
+  "description": "Custom CI/CD images we use in GitLab CI/CD, Cirrus and CircleCI.",
+  "packageManager": "yarn@3.0.2",
+  "scripts": {
+    "commit": "yarn wizard:commit",
+    "wizard:commit": "cz --signoff"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "workspaces": ["docker/**"],
+  "devDependencies": {
+    "@commitlint/config-conventional": "^13.1.0",
+    "commitizen": "^4.2.4",
+    "commitlint": "^13.1.0",
+    "cz-conventional-changelog": "^3.3.0"
+
+  }
+}
