@@ -1,7 +1,3 @@
-/.dev
-node_modules/
-lib
-
 # Jetbrains
 /.idea
 /*.iml
@@ -107,3 +103,7 @@ typings/
 !.yarn/sdks
 !.yarn/versions
 .yarn/unplugged
+
+# The swapfiles and checkpoint saves in GNU nano
+*.swp
+*.save
