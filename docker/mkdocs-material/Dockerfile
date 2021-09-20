@@ -1,25 +1,28 @@
 # Attempt to use latest Python version as possible.
-FROM python:3-slim-buster
+FROM python:3-alpine3.14
 
-# Update Debian packages first
-RUN apt update && apt install -y git wget curl bash && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+# Copy the entrypoint script into /usr/local/bin
+COPY ./entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
-# First, upgrade pip and setuptools.
-RUN pip3 install --no-cache --upgrade pip setuptools wheel
-
-# Then install Mkdocs and the theme with pip.
-RUN pip3 install --no-cache mkdocs mkdocs-material
-
-# ..and the basic plugins
-RUN pip install --no-cache-dir \
+# Add Git, wget and crul, maybe needed by your scripts, upgrade stuff
+# and then install mkdocs
+RUN apk add git wget curl bash dumb-init --no-cache && rm -rfv /etc/apk/cache \
+    && pip3 install --no-cache-dir --upgrade pip setuptools wheel \
+    && pip3 install --no-cache-dir \
+        'mkdocs' \
+        'mkdocs-material' \
         'mkdocs-awesome-pages-plugin' \
         'mkdocs-git-revision-date-localized-plugin' \
         'mkdocs-minify-plugin' \
         'mkdocs-redirects'
+    && chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# assume you mounted it when running
+# assume you mounted it when running, but optionally change it with --workdir
+# in ypur  `docker run` command
 WORKDIR /docs
 
-ENTRYPOINT ["mkdocs"]
+# For documentation purposes only, see https://docs.docker.com/engine/reference/builder/#expose
+EXPOSE 8080
+
+ENTRYPOINT ["dumb-init", "/usr/local/bin/docker-entrypoint.sh"]
 CMD ["build"]

@@ -93,7 +93,7 @@ jobs:
       # We need to switch from the regular build-action because we're using bakefiles in Terraform style, HCL.
       - name: Build with buildx bake
         if: ${{ steps.filter.outputs.dockerfile == 'true' || steps.filter.outputs.manual == 'true' }}
-        uses: docker/bake-action@1.6.0
+        uses: docker/bake-action@v1.6.0
         with:
           files: |
             ./docker/mkdocs-material/build.hcl
