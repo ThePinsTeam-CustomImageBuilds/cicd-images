@@ -1,0 +1,20 @@
+#!/bin/sh
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <basebranch>"
+    exit 1
+fi
+
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "Fatal: not inside a git repository"
+    exit 2
+fi
+
+basebranch=$1
+
+if ! git rev-parse --verify --quiet $basebranch >/dev/null; then
+    # The base branch does not eixst, probably due to a shallow clone
+    git fetch -v $CI_MERGE_REQUEST_PROJECT_URL.git +refs/heads/$basebranch:refs/heads/$basebranch
+fi
+
+git --no-pager diff --diff-filter=ACMR --name-only $basebranch...HEAD -- "*/APKBUILD" | xargs -r -n1 dirname

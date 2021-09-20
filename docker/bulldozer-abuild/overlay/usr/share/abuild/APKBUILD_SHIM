@@ -1,0 +1,111 @@
+#!/bin/sh
+
+set -e
+
+arch=
+builddir=
+checkdepends=
+depends=
+depends_dev=
+depends_doc=
+depends_libs=
+depends_openrc=
+depends_static=
+install=
+install_if=
+langdir=
+ldpath=
+license=
+makedepends=
+makedepends_build=
+makedepends_host=
+md5sums=
+options=
+patch_args=
+pkgbasedir=
+pkgdesc=
+pkgdir=
+pkgname=
+pkgrel=
+pkgver=
+pkggroups=
+pkgusers=
+provides=
+provider_priority=
+replaces=
+sha256sums=
+sha512sums=
+sonameprefix=
+source=
+srcdir=
+startdir=
+subpackages=
+subpkgdir=
+subpkgname=
+triggers=
+url=
+
+# abuild.conf
+
+CFLAGS=
+CXXFLAGS=
+CPPFLAGS=
+LDFLAGS=
+JOBS=
+MAKEFLAGS=
+CMAKE_CROSSOPTS=
+
+. ./APKBUILD
+
+: "$arch"
+: "$builddir"
+: "$checkdepends"
+: "$depends"
+: "$depends_dev"
+: "$depends_doc"
+: "$depends_libs"
+: "$depends_openrc"
+: "$depends_static"
+: "$install"
+: "$install_if"
+: "$langdir"
+: "$ldpath"
+: "$license"
+: "$makedepends"
+: "$makedepends_build"
+: "$makedepends_host"
+: "$md5sums"
+: "$options"
+: "$patch_args"
+: "$pkgbasedir"
+: "$pkgdesc"
+: "$pkgdir"
+: "$pkgname"
+: "$pkgrel"
+: "$pkgver"
+: "$pkggroups"
+: "$pkgusers"
+: "$provides"
+: "$provider_priority"
+: "$replaces"
+: "$sha256sums"
+: "$sha512sums"
+: "$sonameprefix"
+: "$source"
+: "$srcdir"
+: "$startdir"
+: "$subpackages"
+: "$subpkgdir"
+: "$subpkgname"
+: "$triggers"
+: "$url"
+
+# abuild.conf
+
+: "$CFLAGS"
+: "$CXXFLAGS"
+: "$CPPFLAGS"
+: "$LDFLAGS"
+: "$JOBS"
+: "$MAKEFLAGS"
+: "$CMAKE_CROSSOPTS"

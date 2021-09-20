@@ -1,0 +1,2 @@
+# We don't need passwords in an container, because YOLO
+%wheel ALL=(ALL) NOPASSWD: ALL
