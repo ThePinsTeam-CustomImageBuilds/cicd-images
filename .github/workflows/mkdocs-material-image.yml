@@ -4,9 +4,17 @@ on:
   push:
     branches:
       - master
+    paths:
+      - docker/**
+      - .github/workflows/*.yml
+      - .trigger-rebuild
   pull_request:
     branches:
       - master
+    paths:
+      - docker/**
+      - .github/workflows/*.yml
+      - .trigger-rebuild
 
 env:
   # GHCR
@@ -89,6 +97,16 @@ jobs:
             type=sha,format=long
           flavor: |
             latest=true
+
+      # Since we're doing multiarch builds, we need to setup QEMU and Buildx ahead of time
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          # DOCKER_BUILDKIT will be set to 1 for "docker build" commands
+          install: true
 
       # We need to switch from the regular build-action because we're using bakefiles in Terraform style, HCL.
       - name: Build with buildx bake
