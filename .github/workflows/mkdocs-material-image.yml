@@ -18,7 +18,7 @@ on:
 
 env:
   # GHCR
-  gh_namespace: thepinsteam-customimagebuilds
+  gh_namespace: thepinsteam-customimagebuilds/cicd-images
   # since our RHQCR and Docker Hub namespaces are same,
   # we can just squash them into one env.
   docker_namespace: madebythepinshub
