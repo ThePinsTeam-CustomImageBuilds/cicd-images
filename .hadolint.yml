@@ -1,2 +1,3 @@
 ignored:
   - DL3006 # For .gitpod.Dockerfile
+  - DL3004 # I'm fine with using sudo
