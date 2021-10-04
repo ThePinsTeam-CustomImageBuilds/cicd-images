@@ -1,5 +1,9 @@
 {
   "recommendations": [
-    "arcanis.vscode-zipfs"
+    "arcanis.vscode-zipfs",
+    "vivaxy.vscode-conventional-commits",
+    "gitlab.gitlab-workflow",
+    "davidanson.vscode-markdownlint",
+    "exiasr.hadolint"
   ]
 }
