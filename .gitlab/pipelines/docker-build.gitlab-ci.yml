@@ -1,0 +1,17 @@
+# Base docker-build GitLab pipeline for stuff related to Dockerfiles
+.docker-build-base:
+  script:
+    - '[ $SKIP_BUILD_STEP == "0" ] && ./scripts/build.sh'
+
+# GitLab pipeline base for MRs, which extends the base one above.
+.docker-build-mr:
+  extends:
+    - .docker-build-base
+  variables:
+    SKIP_DOCKER_BUILDKIT_PUSH: "1"
+    SKIP_LOGIN_STEP: "1"
+    SKIP_DOPPLER_STEP: "1"
+  rules:
+    # Update branch name to main once the branch rename is done.
+    - changes:
+        - docker/**

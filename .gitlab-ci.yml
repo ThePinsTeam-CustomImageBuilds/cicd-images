@@ -1,0 +1,62 @@
+image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/alpine:edge
+
+# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#docker-cannot-connect-to-the-docker-daemon-at-tcpdocker2375-is-the-docker-daemon-running
+services:
+  - name: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:stable-dind
+    alias: docker
+
+include:
+  # First, load our global ruleset first.
+  - local: .gitlab/global-rules.gitlab-ci.yml
+  # Include everything our pipelines stuff.
+  - local: .gitlab/pipelines/*.yml
+
+script-tests:
+  stage: test
+  extends:
+    - .docker-build-base
+  variables:
+    SKIP_DOCKER_BUILDKIT_PUSH: "1"
+    SKIP_LOGIN_STEP: "1" # Configuration is still in progress on 
+    SKIP_DOPPLER_STEP: "1"
+  rules:
+    - changes:
+       - docker/gitlab-cicd-script-tests/Dockerfile
+       - docker/gitlab-cicd-script-tests/build-metadata.json
+       - scripts/*.sh
+
+dockerfile-lint:
+  stage: lint
+  extends:
+    - .docker-build-base
+  variables:
+    SKIP_LOGIN_STEP: "1"
+    SKIP_BUILD_STEP: "1"
+  script:
+    - ./scripts/hadolint.sh
+  allow_failure: true
+
+build-branches:
+  stage: build
+  needs:
+    - dockerfile-lint
+  extends:
+    - .docker-build-base
+  rules:
+    - changes:
+        - docker/**/Dockerfile
+        - docker/**/build-metadata.json
+      # Only run this on branches, except branches that has an merge request
+      if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE != "merge_request_event"'
+
+build-main:
+  stage: build
+  needs:
+    - dockerfile-lint
+  extends:
+    - .docker-build-base
+  rules:
+    - changes:
+        - docker/**/Dockerfile
+        - docker/**/build-metadata.json
+      if: '$CI_COMMIT_BRANCH == "main"'
