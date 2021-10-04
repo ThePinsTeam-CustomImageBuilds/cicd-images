@@ -1,0 +1,9 @@
+image:
+  file: .gitpod.Dockerfile
+vscode:
+  extensions:
+    - vivaxy.vscode-conventional-commits
+    - gitlab.gitlab-workflow
+    - davidanson.vscode-markdownlint
+    - exiasr.hadolint
+    - arcanis.vscode-zipfs
