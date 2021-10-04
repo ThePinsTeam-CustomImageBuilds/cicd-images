@@ -1,0 +1,25 @@
+name: Mirror to GitLab SaaS
+
+on:
+  push:
+
+env:
+  gitlab_saas_repo_id:
+  gitlab_saas_repo: MadeByThePinsHub/infra/docker/custom-cicd-images
+
+jobs:
+  sync-commits:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Mirror + trigger CI
+        uses: SvanBoxel/gitlab-mirror-and-ci-action@0.2
+        with:
+          args: https://gitlab.com/${{env.gitlab_saas_repo}}
+        env:
+          GITLAB_HOSTNAME: "gitlab.com"
+          GITLAB_USERNAME: "RecapTimeBot"
+          GITLAB_PASSWORD: ${{ secrets.GL_SERVICE_ACCOUNT_API_KEY }}
+          GITLAB_PROJECT_ID: ${{env.gitlab_saas_repo_id}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
