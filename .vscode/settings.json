@@ -4,24 +4,20 @@
     "**/.pnp.*": true
   },
   "conventionalCommits.scopes": [
-    // CI/CD
     "github-actions",
     "gitlab-cicd",
     "scripts",
-
-    // Docker stuff
     "docker",
     "mkdocs-material",
     "bulldozer-abuild",
-
-    // cloud dev environments
     "gitpod",
     "codespaces",
     "remote-containers",
-    "vscode", // for prject-wide configuration and stuff
-
-    // other meta stuff
+    "vscode",
     "readme",
-    "global"
+    "global",
+    "deps-dev",
+    "deps",
+    "workspaces"
   ]
 }
