@@ -9,14 +9,14 @@ env:
   gitlab_saas_repo: MadeByThePinsHub/infra/docker/custom-cicd-images
 
 jobs:
-  sync-commits:
+  sync-commits-main:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
       - name: Synchorize to GitLab
         uses: wei/git-sync@v3
         with:
-          source_repo: ${{github.event.repository.name}}
+          source_repo: ${{github.repository}}
           source_branch: "master"
           destination_repo: "https://RecapTimeBot:${{secrets.GL_SERVICE_ACCOUNT_ACCESS_TOKEN}}@gitlab.com/${{env.gitlab_saas_repo}}"
           destination_branch: "master"
