@@ -4,7 +4,7 @@ on:
   push:
 
 env:
-  gitlab_saas_repo_id:
+  gitlab_saas_repo_id: 29726997
   gitlab_saas_repo: MadeByThePinsHub/infra/docker/custom-cicd-images
 
 jobs:
