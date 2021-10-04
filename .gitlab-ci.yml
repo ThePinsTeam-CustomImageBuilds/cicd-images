@@ -11,6 +11,19 @@ include:
   # Include everything our pipelines stuff.
   - local: .gitlab/pipelines/*.yml
 
+stages:
+  - build
+  - test
+  - lint
+  - triage
+
+scripts-lint:
+  stage: lint
+  variables:
+    SKIP_LOGIN_STEP: "1" # Configuration is still in progress on 
+  script:
+    - shellcheck scripts/*.sh
+
 script-tests:
   stage: test
   extends:
