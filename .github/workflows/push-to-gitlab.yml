@@ -2,6 +2,7 @@ name: Mirror to GitLab SaaS
 
 on:
   push:
+    branches: [master]
 
 env:
   gitlab_saas_repo_id: 29726997
@@ -12,14 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v2
-      - name: Mirror + trigger CI
-        uses: SvanBoxel/gitlab-mirror-and-ci-action@0.2
+      - name: Synchorize to GitLab
+        uses: wei/git-sync@v3
         with:
-          args: https://gitlab.com/${{env.gitlab_saas_repo}}
-        env:
-          GITLAB_HOSTNAME: "gitlab.com"
-          GITLAB_USERNAME: "RecapTimeBot"
-          GITLAB_PASSWORD: ${{ secrets.GL_SERVICE_ACCOUNT_API_KEY }}
-          GITLAB_PROJECT_ID: ${{env.gitlab_saas_repo_id}}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          source_repo: ${{github.event.repository.name}}
+          source_branch: "master"
+          destination_repo: "https://RecapTimeBot:${{secrets.GL_SERVICE_ACCOUNT_ACCESS_TOKEN}}@gitlab.com/${{env.gitlab_saas_repo}}"
+          destination_branch: "master"
