@@ -4,7 +4,7 @@ FROM gitpod/workspace-full
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Install Doppler CLI, Hadolint and ShellCheck
-RUN curl -Ls --tlsv1.2 --proto "=https" --retry 3  https://cli.doppler.com/install.sh | sh \
+RUN curl -Ls --tlsv1.2 --proto "=https" --retry 3  https://cli.doppler.com/install.sh | sudo sh \
     && brew install hadolint shellcheck \
     # Needed for testing scripts in an Gitpod workspace while simulating GitLab CI env.
     && sudo install-packages gettext
