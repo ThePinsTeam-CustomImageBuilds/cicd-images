@@ -1,8 +1,8 @@
-image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/alpine:edge
+image: ghcr.io/maniator/dind-buildx:docker_20.10.8-buildx_0.6.3
 
 # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#docker-cannot-connect-to-the-docker-daemon-at-tcpdocker2375-is-the-docker-daemon-running
 services:
-  - name: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:dind
+  - name: ghcr.io/maniator/dind-buildx:docker_20.10.8-buildx_0.6.3
     alias: docker
 
 include:
@@ -28,6 +28,7 @@ scripts:test:
   stage: test
   extends:
     - .docker-build-base
+  needs:
     - scripts:lint
   variables:
     SKIP_DOCKER_BUILDKIT_PUSH: "1"

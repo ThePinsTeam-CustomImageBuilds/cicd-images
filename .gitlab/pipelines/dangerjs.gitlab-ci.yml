@@ -3,6 +3,7 @@ dangerjs:
   image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:16-alpine
   variables:
     SKIP_LOGIN_STEP: "1"
+    SKIP_BUILDKIT_SETUP: "1"
   before_script:
     - yarn install 
   script:
