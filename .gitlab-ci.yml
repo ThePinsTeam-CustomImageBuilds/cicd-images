@@ -2,7 +2,7 @@ image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/alpine:edge
 
 # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#docker-cannot-connect-to-the-docker-daemon-at-tcpdocker2375-is-the-docker-daemon-running
 services:
-  - name: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:stable-dind
+  - name: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:dind
     alias: docker
 
 include:
@@ -17,20 +17,22 @@ stages:
   - lint
   - triage
 
-scripts-lint:
+scripts:lint:
   stage: lint
   variables:
-    SKIP_LOGIN_STEP: "1" # Configuration is still in progress on 
+    SKIP_LOGIN_STEP: "1"
   script:
     - shellcheck scripts/*.sh
 
-script-tests:
+scripts:test:
   stage: test
   extends:
     - .docker-build-base
+  needs:
+    - scripts:lint
   variables:
     SKIP_DOCKER_BUILDKIT_PUSH: "1"
-    SKIP_LOGIN_STEP: "1" # Configuration is still in progress on 
+    SKIP_LOGIN_STEP: "1"
     SKIP_DOPPLER_STEP: "1"
   rules:
     - changes:
@@ -38,21 +40,25 @@ script-tests:
        - docker/gitlab-cicd-script-tests/build-metadata.json
        - scripts/*.sh
 
-dockerfile-lint:
+docker:lint:
   stage: lint
   extends:
     - .docker-build-base
   variables:
     SKIP_LOGIN_STEP: "1"
-    SKIP_BUILD_STEP: "1"
+    SKIP_BUILD_STEP: "1" # We probably need to make the build-metadata JSON files to rely on $CI_COMMIT_BRANCH soon.
   script:
     - ./scripts/hadolint.sh
   allow_failure: true
+  rules:
+    # Trigger this outside merge requests
+    - if: '$CI_PIPELINE_SOURCE != "merge_request_event"'
+      when: always
 
-build-branches:
+docker:build-branches:
   stage: build
   needs:
-    - dockerfile-lint
+    - docker:lint
   extends:
     - .docker-build-base
   rules:
@@ -61,11 +67,12 @@ build-branches:
         - docker/**/build-metadata.json
       # Only run this on branches, except branches that has an merge request
       if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE != "merge_request_event"'
+      when: always
 
-build-main:
+docker:build-main:
   stage: build
   needs:
-    - dockerfile-lint
+    - docker:lint
   extends:
     - .docker-build-base
   rules:

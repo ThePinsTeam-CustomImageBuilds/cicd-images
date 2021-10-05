@@ -6,7 +6,7 @@ dangerjs:
   before_script:
     - yarn install 
   script:
-    - doppler run --command="yarn ci:dangerjs"
+    - ./scripts/triageops-dangerjs.sh
   rules:
     # Only run DangerJS on merge requests
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
