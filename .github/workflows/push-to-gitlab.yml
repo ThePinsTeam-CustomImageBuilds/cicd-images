@@ -17,6 +17,6 @@ jobs:
         uses: wei/git-sync@v3
         with:
           source_repo: ${{github.repository}}
-          source_branch: "master"
+          source_branch: "main"
           destination_repo: "https://RecapTimeBot:${{secrets.GL_SERVICE_ACCOUNT_API_KEY}}@gitlab.com/${{env.gitlab_saas_repo}}"
-          destination_branch: "master"
+          destination_branch: "main"

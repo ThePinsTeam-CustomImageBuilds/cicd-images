@@ -1,8 +1,8 @@
-image: ghcr.io/maniator/dind-buildx:docker_20.10.8-buildx_0.6.3
+image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:stable
 
 # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#docker-cannot-connect-to-the-docker-daemon-at-tcpdocker2375-is-the-docker-daemon-running
 services:
-  - name: docker:dind
+  - name: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:dind
     alias: docker
 
 include:
