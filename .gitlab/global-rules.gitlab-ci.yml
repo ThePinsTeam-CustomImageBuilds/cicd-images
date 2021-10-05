@@ -15,5 +15,5 @@ workflow:
     - if: '$CI_COMMIT_BRANCH'
 
 before_script:
-  - apk add bash coreutils gettext curl jq
+  - apk add bash coreutils gettext curl jq gnupg
   - ./scripts/gitlab-cicd-setup.sh
