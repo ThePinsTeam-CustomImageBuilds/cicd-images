@@ -17,18 +17,17 @@ stages:
   - lint
   - triage
 
-scripts:lint:
+.scripts:lint:
   stage: lint
   variables:
     SKIP_LOGIN_STEP: "1"
   script:
     - shellcheck scripts/*.sh
 
-scripts:test:
+.scripts:test:
   stage: test
   extends:
     - .docker-build-base
-  needs:
     - scripts:lint
   variables:
     SKIP_DOCKER_BUILDKIT_PUSH: "1"
