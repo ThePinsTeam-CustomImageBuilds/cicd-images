@@ -10,6 +10,7 @@ SKIP_DOPPLER_STEP=${SKIP_DOPPLER_STEP:-"0"}
 SKIP_LOGIN_STEP=${SKIP_LOGIN_STEP:-"0"}
 SKIP_BUILDKIT_SETUP=${SKIP_BUILDKIT_SETUP:-"0"}
 HADOLINT_VERSION=${HADOLINT_VERSION:="2.7.0"}
+BUILDX_VER=${BUILDX_VER:"0.6.3"}
 
 # If something is needed in other scripts through the lifecycle of this one, just export it.
 export CI_REGISTRY=${CI_REGISTRY:-"registry.gitlab.com"} \
@@ -35,10 +36,15 @@ else
   echo "warning: Login step was being skipped!"
 fi
 
-# Step 3: Setup multiarch builds ahead of time.
+# Step 3: Install Buildx plugin
+mkdir -p "$HOME/.docker/cli-plugins"
+wget -qO ~/.docker/cli-plugins/docker-buildx "https://github.com/docker/buildx/releases/download/v${BUILDX_VER}/buildx-v${BUILDX_VER}.linux-amd64"
+chmod +x /root/.docker/cli-plugins/docker-buildx
+
+# Step 4: Setup multiarch builds ahead of time.
 if [[ $SKIP_BUILDKIT_SETUP == "0" ]]; then
   echo "==> Setting up QEMU..."
-  docker run --rm --privileged tonistiigi/binfmt:latest --install all
+  docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   echo "==> Setting up Docker buildx..."
   docker buildx create --name thepinsteam-glcicd-custom-image-builder --use --driver docker-container --buildkitd-flags --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host
   docker buildx inspect --bootstrap --builder thepinsteam-glcicd-custom-image-builder

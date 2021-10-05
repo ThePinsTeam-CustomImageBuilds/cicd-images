@@ -2,7 +2,7 @@ name: Mirror to GitLab SaaS
 
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 env:
   gitlab_saas_repo_id: 29726997
