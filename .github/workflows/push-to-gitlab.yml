@@ -18,5 +18,5 @@ jobs:
         with:
           source_repo: ${{github.repository}}
           source_branch: "master"
-          destination_repo: "https://RecapTimeBot:${{secrets.GL_SERVICE_ACCOUNT_ACCESS_TOKEN}}@gitlab.com/${{env.gitlab_saas_repo}}"
+          destination_repo: "https://RecapTimeBot:${{secrets.GL_SERVICE_ACCOUNT_API_KEY}}@gitlab.com/${{env.gitlab_saas_repo}}"
           destination_branch: "master"
