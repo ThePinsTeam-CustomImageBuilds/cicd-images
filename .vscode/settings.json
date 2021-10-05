@@ -19,5 +19,7 @@
     "deps-dev",
     "deps",
     "workspaces"
-  ]
+  ],
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }
