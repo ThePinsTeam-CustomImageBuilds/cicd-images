@@ -2,7 +2,7 @@ image: ghcr.io/maniator/dind-buildx:docker_20.10.8-buildx_0.6.3
 
 # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#docker-cannot-connect-to-the-docker-daemon-at-tcpdocker2375-is-the-docker-daemon-running
 services:
-  - name: ghcr.io/maniator/dind-buildx:docker_20.10.8-buildx_0.6.3
+  - name: docker:dind
     alias: docker
 
 include:
