@@ -9,7 +9,7 @@ include:
   # First, load our global ruleset first.
   - local: .gitlab/global-rules.gitlab-ci.yml
   # Include everything our pipelines stuff.
-  - local: .gitlab/pipelines/*.yml
+  - local: .gitlab/pipelines/*.gitlab-ci.yml
 
 stages:
   - lint
@@ -39,44 +39,3 @@ scripts:test:
        - docker/gitlab-cicd-script-tests/Dockerfile
        - docker/gitlab-cicd-script-tests/build-metadata.json
        - scripts/*.sh
-
-docker:lint:
-  stage: lint
-  extends:
-    - .docker-build-base
-  variables:
-    SKIP_LOGIN_STEP: "1"
-    SKIP_BUILD_STEP: "1" # We probably need to make the build-metadata JSON files to rely on $CI_COMMIT_BRANCH soon.
-  script:
-    - ./scripts/hadolint.sh
-  allow_failure: true
-  rules:
-    # Trigger this outside merge requests
-    - if: '$CI_PIPELINE_SOURCE != "merge_request_event"'
-      when: always
-
-docker:build-branches:
-  stage: build
-  needs:
-    - docker:lint
-  extends:
-    - .docker-build-base
-  rules:
-    - changes:
-        - docker/**/Dockerfile
-        - docker/**/build-metadata.json
-      # Only run this on branches, except branches that has an merge request
-      if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE != "merge_request_event"'
-      when: always
-
-docker:build-main:
-  stage: build
-  needs:
-    - docker:lint
-  extends:
-    - .docker-build-base
-  rules:
-    - changes:
-        - docker/**/Dockerfile
-        - docker/**/build-metadata.json
-      if: '$CI_COMMIT_BRANCH == "main"'

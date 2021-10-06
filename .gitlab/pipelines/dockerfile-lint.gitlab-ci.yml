@@ -1,0 +1,33 @@
+# GitLab CI configuration for Hadolint stuff
+
+docker:lint-branches:
+  stage: lint
+  extends:
+    - .docker-build-base
+  variables:
+    SKIP_LOGIN_STEP: "1"
+    SKIP_BUILD_STEP: "1" # We probably need to make the build-metadata JSON files to rely on $CI_COMMIT_BRANCH soon.
+  script:
+    - ./scripts/hadolint.sh
+  allow_failure: true
+  rules:
+    - changes:
+            - docker/**/Dockerfile
+      if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE != "merge_request_event"'
+      when: always
+
+docker:lint-main:
+  stage: lint
+  extends:
+    - .docker-build-base
+  variables:
+    SKIP_LOGIN_STEP: "1"
+    SKIP_BUILD_STEP: "1"
+  script:
+    - ./scripts/hadolint.sh
+  allow_failure: true
+  rules:
+    - changes:
+            - docker/**/Dockerfile
+      if: '$CI_COMMIT_BRANCH == "main"'
+      when: always

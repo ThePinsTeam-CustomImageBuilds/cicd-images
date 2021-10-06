@@ -1,7 +1,7 @@
 # Base docker-build GitLab pipeline for stuff related to Dockerfiles
 .docker-build-base:
   script:
-    - '[ $SKIP_BUILD_STEP == "0" ] && ./scripts/build.sh'
+    - '[ $SKIP_BUILD_STEP == "0" ] && ./scripts/build.sh $DOCKER_DIRECTORY_NAME'
 
 # GitLab pipeline base for MRs, which extends the base one above.
 .docker-build-mr:
@@ -11,7 +11,96 @@
     SKIP_DOCKER_BUILDKIT_PUSH: "1"
     SKIP_LOGIN_STEP: "1"
     SKIP_DOPPLER_STEP: "1"
+
+### mkdocs-material ###
+mkdocs-material:branches:
+  stage: build
+  needs:
+    - docker:lint-branches
+  extends:
+    - .docker-build-base
+  variables:
+    DOCKER_DIRECTORY_NAME: mkdocs-material
   rules:
-    # Update branch name to main once the branch rename is done.
     - changes:
-        - docker/**
+        - docker/mkdocs-material/Dockerfile
+        - docker/mkdocs-material/build-metadata.json
+        - docker/mkdocs-material/entrypoint.sh
+      # Only run this on branches, except branches that has an merge request
+      if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE != "merge_request_event"'
+      when: always
+
+mkdocs-material:main:
+  stage: build
+  needs:
+    - docker:lint-main
+  variables:
+    DOCKER_DIRECTORY_NAME: mkdocs-material
+  extends:
+    - .docker-build-base
+  rules:
+    - changes:
+        - docker/mkdocs-material/Dockerfile
+        - docker/mkdocs-material/build-metadata.json
+        - docker/mkdocs-material/entrypoint.sh
+      if: '$CI_COMMIT_BRANCH == "main"'
+
+mkdocs-material:mr:
+  stage: build
+  extends:
+    - .docker-build-mr
+  variables:
+    DOCKER_DIRECTORY_NAME: mkdocs-material
+  rules:
+    - changes:
+        - docker/mkdocs-material/Dockerfile
+        - docker/mkdocs-material/build-metadata.json
+        - docker/mkdocs-material/entrypoint.sh
+      if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always
+
+### bulldozer-abuild ###
+bulldozer-abuild:branches:
+  stage: build
+  needs:
+    - docker:lint-branches
+  extends:
+    - .docker-build-base
+  variables:
+    DOCKER_DIRECTORY_NAME: mkdocs-material
+  rules:
+    - changes:
+        - docker/bulldozer-abuild/Dockerfile
+        - docker/bulldozer-abuild/build-metadata.json
+        - docker/bulldozer-abuild/overlay/**
+      if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE != "merge_request_event"'
+      when: always
+
+bulldozer-abuild:main:
+  stage: build
+  needs:
+    - docker:lint-main
+  variables:
+    DOCKER_DIRECTORY_NAME: bulldozer-abuild
+  extends:
+    - .docker-build-base
+  rules:
+    - changes:
+        - docker/bulldozer-abuild/Dockerfile
+        - docker/bulldozer-abuild/build-metadata.json
+        - docker/bulldozer-abuild/overlay/**
+      if: '$CI_COMMIT_BRANCH == "main"'
+
+bulldozer-abuild:mr:
+  stage: build
+  extends:
+    - .docker-build-mr
+  variables:
+    DOCKER_DIRECTORY_NAME: bulldozer-abuild
+  rules:
+    - changes:
+        - docker/bulldozer-abuild/Dockerfile
+        - docker/bulldozer-abuild/build-metadata.json
+        - docker/bulldozer-abuild/overlay/**
+      if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always

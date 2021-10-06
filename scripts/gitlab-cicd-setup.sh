@@ -10,7 +10,7 @@ SKIP_DOPPLER_STEP=${SKIP_DOPPLER_STEP:-"0"}
 SKIP_LOGIN_STEP=${SKIP_LOGIN_STEP:-"0"}
 SKIP_BUILDKIT_SETUP=${SKIP_BUILDKIT_SETUP:-"0"}
 HADOLINT_VERSION=${HADOLINT_VERSION:="2.7.0"}
-BUILDX_VER=${BUILDX_VER:"0.6.3"}
+BUILDX_VER=${BUILDX_VER:-"0.6.3"}
 
 # If something is needed in other scripts through the lifecycle of this one, just export it.
 export CI_REGISTRY=${CI_REGISTRY:-"registry.gitlab.com"} \
