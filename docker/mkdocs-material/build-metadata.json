@@ -1,0 +1,38 @@
+{
+  "target": {
+    "build": {
+      "args": {
+        "DOCKER_META_VERSION": "sha-$CI_COMMIT_SHA",
+        "TODO": "tg"
+      },
+      "context": "docker/mkdocs-material",
+      "dockerfile": "Dockerfile",
+      "labels": {
+        "org.opencontainers.image.description": "Custom Mkdocs Docker image with Material theme and some plugins preinstalled, maintained by The Pins Team Infra.",
+        "org.opencontainers.image.licenses": "MIT",
+        "org.opencontainers.image.source": "https://gitlab.com/MadeByThePinsHub/infra/docker/cicd-images/tree/main/docker/mkdocs-material",
+        "org.opencontainers.image.title": "Custom Mkdocs Material Image | The Pins Team Infra",
+        "org.opencontainers.image.url": "https://gitlab.com/MadeByThePinsHub/infra/docker/cicd-images/blob/main/docker/mkdocs-material/README.md",
+        "org.opencontainers.image.version": "sha-$CI_COMMIT_SHA",
+        "org.opencontainers.image.created": "$CI_BUILD_TIME",
+        "org.opencontainers.image.revision": "$CI_COMMIT_SHA"
+      },
+      "tags": [
+        "ghcr.io/thepinsteam-customimagebuilds/cicd-images/mkdocs-material:$CI_IMAGE_TAG_NAME",
+        "registry.gitlab.com/madebythepinshub/infra/docker/custom-cicd-images/mkdocs-material:$CI_IMAGE_TAG_NAME",
+        "quay.io/madebythepinshub/mkdocs-material:$CI_IMAGE_TAG_NAME",
+        "madebythepinshub/mkdocs-material:$CI_IMAGE_TAG_NAME"
+      ],
+      "platforms": [
+        "linux/amd64",
+        "linux/arm/v6",
+        "linux/arm/v7",
+        "linux/arm64",
+        "linux/386"
+      ],
+      "output": [
+        "type=registry"
+      ]
+    }
+  }
+}

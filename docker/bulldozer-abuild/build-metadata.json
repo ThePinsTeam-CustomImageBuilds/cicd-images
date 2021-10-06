@@ -1,0 +1,39 @@
+{
+    "target": {
+      "build": {
+        "args": {
+          "DOCKER_META_VERSION": "sha-$CI_COMMIT_SHA",
+          "TODO": "tg"
+        },
+        "context": "docker/mkdocs-material",
+        "dockerfile": "Dockerfile",
+        "labels": {
+          "org.opencontainers.image.description": "An hybrid Alpine Package Builder and linter Docker image, based on the official images the Alpine Linux developers maintain.",
+          "org.opencontainers.image.licenses": "MIT",
+          "org.opencontainers.image.source": "https://gitlab.com/MadeByThePinsHub/infra/docker/cicd-images/tree/main/docker/bulldozer-abuild",
+          "org.opencontainers.image.title": "Bulldozer Alpine Package Builder | The Pins Team Infra",
+          "org.opencontainers.image.url": "https://gitlab.com/MadeByThePinsHub/infra/docker/cicd-images/blob/main/docker/bulldozer-abuild/README.md",
+          "org.opencontainers.image.version": "sha-$CI_COMMIT_SHA",
+          "org.opencontainers.image.created": "$CI_BUILD_TIME",
+          "org.opencontainers.image.revision": "$CI_COMMIT_SHA"
+        },
+        "tags": [
+          "ghcr.io/thepinsteam-customimagebuilds/cicd-images/bulldozer-abuild:$CI_IMAGE_TAG_NAME",
+          "registry.gitlab.com/madebythepinshub/infra/docker/custom-cicd-images/bulldozer-abuild:$CI_IMAGE_TAG_NAME",
+          "quay.io/madebythepinshub/bulldozer-abuild:$CI_IMAGE_TAG_NAME",
+          "madebythepinshub/bulldozer-abuild:$CI_IMAGE_TAG_NAME"
+        ],
+        "platforms": [
+          "linux/amd64",
+          "linux/arm/v6",
+          "linux/arm/v7",
+          "linux/arm64",
+          "linux/386"
+        ],
+        "output": [
+          "type=registry"
+        ]
+      }
+    }
+  }
+  
