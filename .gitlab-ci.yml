@@ -1,21 +1,10 @@
 image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:stable
 
-# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#docker-cannot-connect-to-the-docker-daemon-at-tcpdocker2375-is-the-docker-daemon-running
-services:
-  - name: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:dind
-    alias: docker
-
 include:
   # First, load our global ruleset first.
   - local: .gitlab/global-rules.gitlab-ci.yml
   # Include everything our pipelines stuff.
   - local: .gitlab/pipelines/*.gitlab-ci.yml
-
-stages:
-  - lint
-  - test
-  - build
-  - triage
 
 scripts:lint:
   stage: lint

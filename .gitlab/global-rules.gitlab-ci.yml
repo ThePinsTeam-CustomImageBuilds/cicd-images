@@ -1,8 +1,20 @@
 # This is where our global variables and workflow rules are being set. Usually, this configuration is
 # loaded through the include keyword in the main .gitlab-ci.yml file at repository root.
 
+stages:
+  - lint
+  - test
+  - build
+  - triage
+
+# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#docker-cannot-connect-to-the-docker-daemon-at-tcpdocker2375-is-the-docker-daemon-running
+services:
+  - name: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:dind
+    alias: docker
+
 variables:
-  DOCKERVERSION: "20.10.8"
+  BUILDX_VER: "0.6.3"
+  HADOLINT_VERSION: "2.7.0"
   DOCKER_CLI_EXPERIMENTAL: enabled
   DOCKER_HOST: tcp://docker:2375/
   DOCKER_DRIVER: overlay2
